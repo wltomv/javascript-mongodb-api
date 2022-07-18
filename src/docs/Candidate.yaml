@@ -1,0 +1,83 @@
+#Create Option or Candidate
+components:
+  schemas:
+    Candidato:
+      type: object
+      properties:
+        eleccion:
+          type: object
+          properties:
+              id_eleccion:
+                  type: string
+                  description: representa el identificador unico de la eleccion
+              titulo:
+                  type: string
+                  description: representa el nombre de la eleccion
+          description: contiene la informacion de la eleccion a la que pertenece
+        titulo:
+          type: string
+          description: nombre de la opcion o participante
+        imagen:
+          type: string
+          description: imagen representativa de la opcion (ejemplo logo o fotografia)
+        metadata:
+          type: object
+          description: contine informacion adicional en formato clave - valor 
+      required:
+        - eleccion
+        - titulo
+        - imagen
+        - metadata
+      example:
+        eleccion:
+            id_eleccion: 1d23ds4241dsdkl
+            titulo: eleccion presidencial 2000
+        titulo: Candidato 6
+        imagen: http://image.s3.com
+        metadata:
+            partido: union
+            puesto: presidente   
+
+paths:
+  /candidate/:
+    post:
+      summary: Crear Candidato
+      tags: [Candidato]
+      description: Usar esta petición para crear una nueva opción o candidato para una elección
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Candidato'
+      responses:
+        200:
+          description: nueva opcion o candidato creado
+          # content:
+          #     application/json:
+  /candidate/{id_eleccion}:
+    get:
+      summary: retorna todos los candidatos para una determinada eleccion
+      tags: [Candidato]
+      parameters:
+        - in: path
+          name: id_eleccion
+          schema:
+            type: string
+          required: true
+          description: el id de una eleccion
+      responses:
+        200:
+          description: todos los candidatos dada una eleccion
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Candidato'
+
+        404:
+          description: eleccion no encontrada
+
+    
